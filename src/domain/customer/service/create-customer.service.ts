@@ -7,14 +7,13 @@ import Address from "../value-object/address";
 
 export default class CreateCustomerService {
 
-  static execute(name: string, address: Address): Customer {
+  static execute(name: string, address: Address, eventDispatcher: EventDispatcher = new EventDispatcher()): Customer {
     const customer = CustomerFactory.create(name);
     customer.changeAddress(address);
 
     const repository = new CustomerRepository();
     repository.create(customer);
 
-    const eventDispatcher = new EventDispatcher();
     eventDispatcher.notify(new CustomerCreatedEvent(customer));
 
     return customer;
